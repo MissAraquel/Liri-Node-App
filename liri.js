@@ -12,6 +12,7 @@ var spotify = new Spotify(keys.spotify);
 
 //Arguments to variables
 var command = process.argv[2]
+var value = process.argv.slice(3).join(" ");
 
 //if/else statement for argument commands 
 if (command === 'my-tweets') {
@@ -19,7 +20,7 @@ if (command === 'my-tweets') {
  } else if (command === 'spotify-this-song') {
     searchSpotify(process.argv[3]);
  } else if (command === 'movie-this') {
-    searchMovie(process.argv[3]);
+    searchMovie(value);
  } else if (command === 'do-what-it-says') {
     runFromFile('random.txt');
  } else {
@@ -34,9 +35,11 @@ if (command === 'my-tweets') {
             var i = 0;
             console.log('\nHere are your last 20 tweets:\n')
             while (i < tweets.length && i <= 20) {
+                console.log("---------------------------");
                 console.log(tweets[i].text)
                 console.log(tweets[i].created_at);
                 console.log();
+                console.log("---------------------------");
                 i++;
             }
         } else {
@@ -52,9 +55,46 @@ function searchSpotify(songSearch) {
        if(err) {
            console.log('Error occured: ' + err);
        }
+       console.log("---------------------------");
        console.log("Artist: " + JSON.stringify(data.tracks.items[0].artists[0].name));
        console.log("Song: " + JSON.stringify(data.tracks.items[0].name));
        console.log("Preview URL: " + JSON.stringify(data.tracks.items[0].preview_url));
        console.log("Album: " + JSON.stringify(data.tracks.items[0].album.name));
+       console.log("---------------------------");
    });
+}
+
+//OMDB function 
+function searchMovie(movie) {
+    if (movie === undefined) {
+        movie = process.argv[3];
+    }
+    if (movie === undefined) {
+        movie = 'Mr. Nobody';
+    }
+    request('http://www.omdbapi.com/?t='+ value +'&plot=short&apikey=trilogy', function(error, response) {
+        if (!error) {
+            jsonResponse = JSON.parse(response.body);
+           // * Title of the movie.
+           console.log("---------------------------");
+            console.log('Title: ' + jsonResponse.Title);
+            // * Year the movie came out.
+            console.log('Year: ' + jsonResponse.Year);
+            // * IMDB Rating of the movie.
+            console.log('IMDB Rating: ' + jsonResponse.imdbRating); 
+            // * Rotten Tomatoes Rating of the movie.
+            console.log('Rotten Tomatoes Rating: ' + jsonResponse.tomatoRating);
+            // * Country where the movie was produced.
+            console.log('Country: ' + jsonResponse.Country);
+            // * Language of the movie.
+            console.log('Language: ' + jsonResponse.Language);
+            // * Plot of the movie.
+            console.log('Plot: ' + jsonResponse.Plot);
+            // * Actors in the movie.
+            console.log('Actors: ' + jsonResponse.Actors);
+            console.log("---------------------------");
+        } else {
+            console.log(error);
+        }
+    });
 }
