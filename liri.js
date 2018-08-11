@@ -45,3 +45,16 @@ if (command === 'my-tweets') {
         }
     });
 }
+
+//Spotify function
+function searchSpotify(songSearch) {
+   spotify.search({type: 'track', query: songSearch, limit: 1}, function(err, data) {
+       if(err) {
+           console.log('Error occured: ' + err);
+       }
+       console.log("Artist: " + JSON.stringify(data.tracks.items[0].artists[0].name));
+       console.log("Song: " + JSON.stringify(data.tracks.items[0].name));
+       console.log("Preview URL: " + JSON.stringify(data.tracks.items[0].preview_url));
+       console.log("Album: " + JSON.stringify(data.tracks.items[0].album.name));
+   });
+}
