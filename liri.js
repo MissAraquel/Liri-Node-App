@@ -98,3 +98,24 @@ function searchMovie(movie) {
         }
     });
 }
+
+//function that runs command from random.txt
+function runFromFile(filename) {
+    fs.readFile(filename, 'utf8', function(error, data) {
+        if (error) {
+            console.log(error);
+        } else {
+            data = data.split(',');
+            command = data[0];
+            if (command === 'spotify-this-song') {
+                searchSpotify(data[1]);
+            } else if (command === 'movie-this') {
+                searchMovie(data[1]);
+            } else if (command === 'my-tweets') {
+                searchTwitter();
+            } else {
+                console.log('Error: Unrecognized command.');
+            }
+        }
+    });
+}
